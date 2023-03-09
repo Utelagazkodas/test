@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C H A T with your friends if you have any xd</title>
+
+    <style>
+        #inputMessage {
+            display: block;
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translate(-50%, 0%);
+            margin: 0 auto;
+            background-color: aqua;
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body style="background-color: black;">
+    <div style="color: antiquewhite; font-size: 200%; text-align: center; word-wrap: break-word;" id="chat">
+    </div>
+    <footer>
+        <div id="inputMessage">
+            <form id = "fo" onsubmit="clicked(); return false">
+                <input type="text" id="inp" onsubmit="clicked()"> 
+                <input type="button" onclick="clicked()" value="SUBMIT">   
+            </form>
+            
+        </div>
+    </footer>
+</body>
+</html>
+
+<script>
+
+    function dispMessages(messages){
+        var te = document.getElementById("chat")
+
+        te.innerHTML = ""
+
+        messages.forEach((element) => {
+            te.innerHTML = te.innerHTML + element
+            te.innerHTML = te.innerHTML + "<br><br>"
+        });
+        te.innerHTML = te.innerHTML + "<br><br><br><br>"
+    }
+
+    const socket = new WebSocket("ws://"+window.location.hostname+":443")
+
+    socket.addEventListener("message", function(event){
+        
+        UnCompressed = JSON.parse(event.data)
+
+        dispMessages(UnCompressed)
+    })
+
+    function clicked(){
+        socket.send(document.getElementById("inp").value)
+        document.getElementById("inp").value = ""
+    }
+</script>
